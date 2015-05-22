@@ -1,3 +1,7 @@
+<%@page import="swt.wt.lab2.api.*"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="org.junit.experimental.categories.Categories"%>
+<%@page import="java.util.List"%>
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
@@ -9,6 +13,9 @@
         <script src="js/jquery.js" type="text/javascript"></script>
         <script src="js/framework.js" type="text/javascript"></script>
     </head>
+    <%
+        Category currentCategory = (Category)request.getAttribute("category");
+    %>
     <body id="questionpage">
         <a class="accessibility" href="#question">Zur Frage springen</a>
         <header role="banner" aria-labelledby="mainheading"><h1 id="mainheading">WT Quiz</h1></header>
@@ -39,7 +46,12 @@
                         <li><span class="accessibility">Frage 3:</span><span id="player2answer3" class="unknown">Unbekannt</span></li>
                     </ul>
                 </div>
-                <div id="currentcategory"><span class="accessibility">Kategorie:</span> Sport</div>
+                <div id="currentcategory"><span class="accessibility">Kategorie:</span>
+                        <%
+                        if(currentCategory != null)
+                            out.print(currentCategory.getName());
+                        %>
+                </div>
             </section>
             
             <!-- Question -->
@@ -47,12 +59,23 @@
                 
                 <form id="questionform" action="question.html" method="post">
                     <h2 id="questionheading" class="accessibility">Frage</h2>
-                    <p id="questiontext">Welche zwei LVAs werden im Model EWA zusammengefasst?</p>
+                    <p id="questiontext">
+                        <%
+                        Question currentQuestion = (Question)request.getAttribute("question");
+                        out.print(currentQuestion.getText());
+                        //Welche zwei LVAs werden im Model EWA zusammengefasst?
+                        %>
+                        
+                    </p>
                     <ul id="answers">
-                        <li><input id="option1" type="checkbox"/><label for="option1">IT Strategie</label></li>
-                        <li><input id="option2" type="checkbox"/><label for="option2">Web Engineering</label></li>
-                        <li><input id="option3" type="checkbox"/><label for="option3">Semistrukturierte Daten</label></li>
-                        <li><input id="option4" type="checkbox"/><label for="option4">Objektorientierte Modellierung</label></li>
+                        <%
+                        List<Choice> allOfChoices = currentQuestion.getAllChoices();
+                        for (int i = 0; i< allOfChoices.size(); i++){
+                            out.print("<li><input id=\"option" + (i+1) + "\" type=\"checkbox\"/><label for=\"option" + (i+1) + "\">");
+                            out.print(allOfChoices.get(i).getText());
+                            out.print("</label></li>");
+                        }
+                        %>
                     </ul>
                     <input id="timeleftvalue" type="hidden" value="100"/>
                     <input id="next" type="submit" value="weiter" accesskey="s"/>
