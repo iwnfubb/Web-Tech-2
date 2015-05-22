@@ -57,7 +57,7 @@
             <!-- Question -->
             <section id="question" aria-labelledby="questionheading">
                 
-                <form id="questionform" action="question.html" method="post">
+                <form id="questionform" action="question.jsp" method="post">
                     <h2 id="questionheading" class="accessibility">Frage</h2>
                     <p id="questiontext">
                         <%
