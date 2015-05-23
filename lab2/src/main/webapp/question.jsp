@@ -15,6 +15,9 @@
     </head>
     <%
         Category currentCategory = (Category)request.getAttribute("category");
+        int questionCounter = (int)request.getAttribute("questionCounter"); 
+        boolean[] player1answer = (boolean[]) request.getAttribute("player1answer"); 
+        boolean[] player2answer = (boolean[]) request.getAttribute("player2answer"); 
     %>
     <body id="questionpage">
         <a class="accessibility" href="#question">Zur Frage springen</a>
@@ -33,17 +36,37 @@
                 <div id="player1info">
                     <span id="player1name">Spieler 1</span>
                     <ul class="playerroundsummary">
-                        <li><span class="accessibility">Frage 1:</span><span id="player1answer1" class="correct">Richtig</span></li>
-                        <li><span class="accessibility">Frage 2:</span><span id="player1answer2" class="incorrect">Falsch</span></li>
-                        <li><span class="accessibility">Frage 3:</span><span id="player1answer3" class="unknown">Unbekannt</span></li>
+                        <%
+                        for(int i = 0; i<questionCounter-1; i++)
+                        {
+                            if(player1answer[i])
+                                out.print("<li><span class=\"accessibility\">Frage " + i + ":</span><span id=\"player1answer"+ i +"\" class=\"correct\">Richtig</span></li>");
+                            else
+                                out.print("<li><span class=\"accessibility\">Frage " + i + ":</span><span id=\"player1answer"+ i +"\" class=\"incorrect\">Falsch</span></li>");
+                        }
+                        for(int i = questionCounter-1 ; i<3 ;  i++)
+                        {
+                            out.print("<li><span class=\"accessibility\">Frage " + i + ":</span><span id=\"player1answer"+ i +"\" class=\"unknown\">Unbekannt</span></li>");
+                        }
+                        %>
                     </ul>
                 </div>
                 <div id="player2info">
                     <span id="player2name">Spieler 2</span>
                     <ul class="playerroundsummary">
-                        <li><span class="accessibility">Frage 1:</span><span id="player2answer1" class="correct">Richtig</span></li>
-                        <li><span class="accessibility">Frage 2:</span><span id="player2answer2" class="correct">Richtig</span></li>
-                        <li><span class="accessibility">Frage 3:</span><span id="player2answer3" class="unknown">Unbekannt</span></li>
+                        <%
+                        for(int i = 0; i<questionCounter-1; i++)
+                        {
+                            if(player2answer[i])
+                                out.print("<li><span class=\"accessibility\">Frage " + i + ":</span><span id=\"player2answer"+ i +"\" class=\"correct\">Richtig</span></li>");
+                            else
+                                out.print("<li><span class=\"accessibility\">Frage " + i + ":</span><span id=\"player2answer"+ i +"\" class=\"incorrect\">Falsch</span></li>");
+                        }
+                        for(int i = questionCounter-1 ; i<3 ;  i++)
+                        {
+                            out.print("<li><span class=\"accessibility\">Frage " + i + ":</span><span id=\"player2answer"+ i +"\" class=\"unknown\">Unbekannt</span></li>");
+                        }
+                        %>
                     </ul>
                 </div>
                 <div id="currentcategory"><span class="accessibility">Kategorie:</span>
@@ -57,23 +80,50 @@
             <!-- Question -->
             <section id="question" aria-labelledby="questionheading">
                 
-                <form id="questionform" action="question.html" method="post">
+                <form id="questionform" action="LetsPlay" method="post">
                     <h2 id="questionheading" class="accessibility">Frage</h2>
                     <p id="questiontext">
                         <%
-                        Question currentQuestion = (Question)request.getAttribute("question");
-                        out.print(currentQuestion.getText());
-                        //Welche zwei LVAs werden im Model EWA zusammengefasst?
+                        int questionNumber = 0, cateNumber = 0;
+                        Question currentQuestion = null;
+                        if(currentCategory != null)
+                        {
+                            currentQuestion = (Question)request.getAttribute("question");
+                            questionCounter = (int)request.getAttribute("questionCounter"); 
+                            questionNumber = (int)request.getAttribute("questionNumber");
+                            cateNumber = (int)request.getAttribute("categoryNumber");
+                            
+                            out.print(currentQuestion.getText());
+                            out.print("<input type=\"hidden\" name=\"categoryNumber\" value = " + cateNumber +  " \" >");
+                            out.print("<input type=\"hidden\" name=\"questionNumber\" value = " + questionNumber + " \" >");
+                            out.print("<input type=\"hidden\" name=\"questionCounter\" value = " + questionCounter + " \" >");
+                        }
+                        
                         %>
                         
                     </p>
+                    
                     <ul id="answers">
                         <%
+                        if(currentQuestion != null){
                         List<Choice> allOfChoices = currentQuestion.getAllChoices();
                         for (int i = 0; i< allOfChoices.size(); i++){
-                            out.print("<li><input id=\"option" + (i+1) + "\" type=\"checkbox\"/><label for=\"option" + (i+1) + "\">");
+                            out.print("<li><input id=\"option" + (i+1) + 
+                                    "\" type=\"checkbox\" name=\"checkbox\" value = "+ allOfChoices.get(i).getId() + 
+                                    " ><label for=\"option" + (i+1) + "\">");
                             out.print(allOfChoices.get(i).getText());
                             out.print("</label></li>");
+                        }
+                        }
+                        int[] answers = (int[])request.getAttribute("answers");
+                        int[] correctAnswers = (int[])request.getAttribute("correctAnswers");
+                        if(answers != null || correctAnswers!= null){
+                        for(int i = 0 ; i < answers.length ; i++)
+                            out.print("<p>" + answers[i] + "</p>");
+                        for(int i = 0 ; i <correctAnswers.length ; i++)
+                             out.print("<p>" + correctAnswers[i] + "</p>");
+                        }else{
+                            out.print("Leerrrrrrrrr");
                         }
                         %>
                     </ul>

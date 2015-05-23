@@ -20,10 +20,14 @@
         
         <section role="main" id="quiz">
           <!--<a id="startgame" href="question.html">Quiz starten</a>-->
-          <form method="POST" action="LetsPlay"><input id="startgame" type="Submit" value="Quiz starten"></form>
+          <form method="POST" action="LetsPlay"><input id="startgame" type="Submit" value="Quiz starten">
+                  <input type="hidden" name="categoryNumber" value = 0>
+                  <input type="hidden" name="questionNumber" value = 0>
+                  <input type="hidden" name="questionCounter" value = 3>
+          </form>
         </section>
 
         <!-- footer -->
-        <footer role="contentinfo">© 2015 WT Quizz</footer>
+        <footer role="contentinfo">© 2015 WT Quiz</footer>
     </body>
 </html>
