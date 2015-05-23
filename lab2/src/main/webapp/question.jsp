@@ -79,8 +79,8 @@
             
             <!-- Question -->
             <section id="question" aria-labelledby="questionheading">
-                
                 <form id="questionform" action="LetsPlay" method="post">
+
                     <h2 id="questionheading" class="accessibility">Frage</h2>
                     <p id="questiontext">
                         <%
